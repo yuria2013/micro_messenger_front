@@ -24,6 +24,10 @@ RUN rm -f /run/httpd/httpd.pid
 # Copy all files from the current directory to /var/www/html/
 COPY ./ /var/www/html/
 
+# Ensure permissions are set correctly for the web directory
+RUN chown -R apache:apache /var/www/html && \
+    chmod -R 755 /var/www/html
+
 # Expose port 8080 for the web server
 EXPOSE 8080
 
