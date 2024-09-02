@@ -17,7 +17,7 @@ RUN mkdir -p /run/httpd && \
 COPY ./ /var/www/html/
 
 # Expose port 80 for the web server
-EXPOSE 80
+EXPOSE 8080
 
 # Start Apache in the foreground
 CMD ["httpd", "-D", "FOREGROUND"]
