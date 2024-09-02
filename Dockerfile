@@ -14,7 +14,7 @@ RUN mkdir -p /run/httpd && \
     chmod 755 /run/httpd
 
 # Copy HTML files to the Apache directory
-COPY ./html/ /var/www/html/
+COPY ./ /var/www/html/
 
 # Expose port 80 for the web server
 EXPOSE 80
