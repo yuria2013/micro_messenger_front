@@ -14,11 +14,14 @@ RUN sed -i 's/^Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf
 RUN sed -i 's|^ErrorLog .*|ErrorLog /var/log/httpd/error_log|' /etc/httpd/conf/httpd.conf
 
 # Create necessary directories and set permissions
-RUN mkdir -p /var/log/httpd && \
-    chown -R apache:apache /var/log/httpd && \
-    chmod 755 /var/log/httpd
+RUN mkdir -p /run/httpd /var/log/httpd && \
+    chown -R apache:apache /run/httpd /var/log/httpd && \
+    chmod 755 /run/httpd /var/log/httpd
 
-# Copy HTML files to the Apache directory
+# Remove existing PID file if it exists
+RUN rm -f /run/httpd/httpd.pid
+
+# Copy all files from the current directory to /var/www/html/
 COPY ./ /var/www/html/
 
 # Expose port 8080 for the web server
