@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メッセージ送信</title>
+</head>
+<body>
+    <div id="header"></div>
+    
+    <h1>メッセージ送信</h1>
+
+    <input type="text" id="receiverId" placeholder="受信者ID">
+    <input type="text" id="content" placeholder="メッセージ内容">
+    <button onclick="sendMessage()">送信</button>
+
+
+    <script src="intersection/intersection.js"></script>
+
+    <script>
+        async function sendMessage() {
+            const receiverId = document.getElementById('receiverId').value;
+            const content = document.getElementById('content').value;
+
+            const response = await fetch(`${messagePath}/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                // loginUserはlocalStorageのデータ
+                body: JSON.stringify({ sender_id: loginUser.id, receiver_id: receiverId, content: content })
+            });
+
+            const data = await response.json();
+            alert(data.message || data.error);
+        }
+    </script>
+</body>
+</html>

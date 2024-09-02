@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン</title>
+</head>
+<body>
+    <div id="header"></div>
+
+    <h1>ログイン</h1>
+
+    <input type="text" id="loginUserId" placeholder="ユーザーID">
+    <input type="password" id="loginPassword" placeholder="パスワード">
+    <button onclick="login()">ログイン</button>
+
+
+    <script src="intersection/intersection.js"></script>
+
+    <script>
+        async function login() {
+            const userId = document.getElementById('loginUserId').value;
+            const password = document.getElementById('loginPassword').value;
+
+            //ログイン情報をuserVMのエンドポイントに送信する
+            const response = await fetch(`${userPath}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                //{ id: 88, password: pass }というJSONオブジェクトを送信する
+                body: JSON.stringify({ id: userId, password: password })
+            });
+
+            // サーバーからのレスポンスをJSONとして解析しdataに格納
+            const data = await response.json();
+
+            // レスポンスのメッセージまたはエラーメッセージをアラート表示
+            alert(data.message || data.error);
+
+            if (data.user) {
+                // ログイン成功時にユーザー情報をlocalStorageに保存
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                // ユーザー情報が存在する場合、それを表示
+                document.getElementById('user-id-display').textContent = data.user.id;
+                document.getElementById('username-display').textContent = data.user.username;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メッセージ取得</title>
+</head>
+<body>
+    <div id="header"></div>
+
+    <h1>メッセージ取得</h1>
+
+    <h2>メッセージ一覧</h2>
+    <div id="messages"></div>
+
+
+    <script src="intersection/intersection.js"></script>
+
+    <script>
+        // メッセージを取得する関数
+        async function getMessages() {
+            const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : null;
+            if (!userId) {
+                alert('ユーザーがログインしていません。');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${messagePath}/messages/${userId}`);
+                const messages = await response.json();
+
+                const messagesDiv = document.getElementById('messages');
+                messagesDiv.innerHTML = ''; // 以前のメッセージをクリア
+
+                messages.forEach(message => {
+                    const p = document.createElement('p');
+                    p.textContent = `From: ${message.sender_id}, Message: ${message.content}`;
+                    messagesDiv.appendChild(p);
+                });
+            } catch (error) {
+                console.error('メッセージの取得中にエラーが発生しました:', error);
+            }
+        }
+
+        // ページを開いたときにgetMessages関数を実行
+        window.onload = getMessages;
+    </script>
+</body>
+</html>
