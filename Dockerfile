@@ -1,15 +1,23 @@
-# RHEL の最新イメージをベースイメージとして使用
+# Use the latest RHEL image as the base image
 FROM registry.access.redhat.com/ubi8/ubi:latest
 
-# Apache httpd をインストール
+# Install Apache httpd
 RUN dnf -y install httpd && \
     dnf clean all
 
-# HTML ファイルを Apache ディレクトリにコピー
-COPY . .
+# Set ServerName to localhost to prevent 'Could not reliably determine the server's fully qualified domain name' warning
+RUN echo "ServerName localhost" >> /etc/httpd/conf/httpd.conf
 
-# Web サーバーのためにポート 80 を公開
+# Ensure proper permissions for the run directory to avoid PID file errors
+RUN mkdir -p /run/httpd && \
+    chown -R apache:apache /run/httpd && \
+    chmod 755 /run/httpd
+
+# Copy HTML files to the Apache directory
+COPY ./html/ /var/www/html/
+
+# Expose port 80 for the web server
 EXPOSE 80
 
-# フォアグラウンドで Apache を起動
+# Start Apache in the foreground
 CMD ["httpd", "-D", "FOREGROUND"]
