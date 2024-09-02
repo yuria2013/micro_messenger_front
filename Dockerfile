@@ -16,7 +16,7 @@ RUN mkdir -p /run/httpd /var/log/httpd && \
     chmod 755 /run/httpd /var/log/httpd
 
 # Copy HTML files to the Apache directory
-COPY ./html/ /var/www/html/
+COPY ./ /var/www/html/
 
 # Expose port 8080 for the web server
 EXPOSE 8080
