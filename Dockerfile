@@ -1,14 +1,16 @@
-# Use the latest RHEL image as the base image
 FROM registry.access.redhat.com/ubi8/ubi:latest
 
 # Install Apache httpd
 RUN dnf -y install httpd && \
     dnf clean all
 
-# Set ServerName to localhost to prevent 'Could not reliably determine the server's fully qualified domain name' warning
+# Set ServerName to suppress warnings
 RUN echo "ServerName localhost" >> /etc/httpd/conf/httpd.conf
 
-# Ensure proper permissions for the run directory to avoid PID file errors
+# Change Apache to listen on port 8080
+RUN sed -i 's/^Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf
+
+# Create necessary directories and set permissions
 RUN mkdir -p /run/httpd && \
     chown -R apache:apache /run/httpd && \
     chmod 755 /run/httpd
@@ -16,7 +18,7 @@ RUN mkdir -p /run/httpd && \
 # Copy HTML files to the Apache directory
 COPY ./ /var/www/html/
 
-# Expose port 80 for the web server
+# Expose port 8080 for the web server
 EXPOSE 8080
 
 # Start Apache in the foreground
