@@ -15,7 +15,6 @@ RUN sed -i 's|^ErrorLog .*|ErrorLog /var/log/httpd/error_log|' /etc/httpd/conf/h
 
 # Create necessary directories and set permissions
 RUN mkdir -p /run/httpd /var/log/httpd && \
-    chown -R apache:apache /run/httpd /var/log/httpd && \
     chmod 755 /run/httpd /var/log/httpd
 
 # Remove existing PID file if it exists
@@ -25,8 +24,7 @@ RUN rm -f /run/httpd/httpd.pid
 COPY ./ /var/www/html/
 
 # Ensure permissions are set correctly for the web directory
-RUN chown -R apache:apache /var/www/html && \
-    chmod -R 755 /var/www/html
+RUN chmod -R 755 /var/www/html
 
 # Expose port 8080 for the web server
 EXPOSE 8080
